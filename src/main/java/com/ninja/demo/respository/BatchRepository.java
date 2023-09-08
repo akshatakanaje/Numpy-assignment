@@ -9,4 +9,6 @@ public interface BatchRepository extends JpaRepository<Batch, Integer>{
 
 	boolean existsByBatchName(String batchName);
 
+	boolean existsByBatchNameAndProgramProgramId(String batchName, int programId);
+
 }

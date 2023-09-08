@@ -35,7 +35,7 @@ public class BatchController {
 		return batchService.createBatch(batchDto);
 	}
 	
-	//update batch info
+	//Update batch info
 	@PutMapping("/{batchId}")
 	public BatchDto updateBatch(@RequestBody BatchDto batchDto, @PathVariable int batchId) {
 		return batchService.updateBatch(batchId, batchDto);

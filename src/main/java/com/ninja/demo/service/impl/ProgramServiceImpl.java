@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +25,14 @@ import com.ninja.demo.service.ProgramService;
 @Service
 public class ProgramServiceImpl implements ProgramService{
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProgramServiceImpl.class);
+	
 	@Autowired
 	ProgramRepository programRepository;
 	
 	@Override
 	public List<ProgramDto> getAllPrograms() {
+		LOGGER.info("Getting all programs");
 	     
 		final List<Program> programRecords = programRepository.findAll();
 	     
@@ -69,6 +71,7 @@ public class ProgramServiceImpl implements ProgramService{
 	
 	@Override
 	public ProgramDto createProgram(ProgramDto programDto) {
+		LOGGER.info("Creating new program");
 		
 		//check program name exists or not
 		boolean exists = programRepository.existsByProgramName(programDto.getProgramName());
@@ -97,6 +100,7 @@ public class ProgramServiceImpl implements ProgramService{
 	
 	@Override
 	public ProgramDto updateProgram(int programId, ProgramDto programDto) {
+		LOGGER.info("Updating program by programId={}", programId);
 		
 		//checking program id is present or not
 		Optional<Program> optional = programRepository.findById(programId);
@@ -132,6 +136,8 @@ public class ProgramServiceImpl implements ProgramService{
 
 	@Override
 	public ResponseDto deleteProgram(int programId) {
+		LOGGER.info("Deleting program by programId={}", programId);
+		
 		//checking program id is present or not
 		Optional<Program> optional = programRepository.findById(programId);
 		if(optional.isPresent()) {
@@ -142,7 +148,6 @@ public class ProgramServiceImpl implements ProgramService{
 		}
 		//throw new IdNotFound
 		throw new NotFoundException("Program does not exist with id '" + programId + "'");
-		
 	}	
 
 }

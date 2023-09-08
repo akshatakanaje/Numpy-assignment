@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ninja.demo.dto.ProgramDto;
 import com.ninja.demo.dto.ResponseDto;
-import com.ninja.demo.exceptions.AlreadyExistException;
 import com.ninja.demo.service.ProgramService;
 
 @RestController
