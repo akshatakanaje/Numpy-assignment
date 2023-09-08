@@ -155,7 +155,7 @@ public class ProgramServiceImpl implements ProgramService{
 		Optional<Program> optional = programRepository.findById(programId);
 		if(optional.isPresent()) {
 			Program program = optional.get();	
-			programRepository.delete(program);
+			programRepository.deleteById(programId);
 			
 			return new ResponseDto("Success", "Program is deleted", new Date(), null);
 		}
