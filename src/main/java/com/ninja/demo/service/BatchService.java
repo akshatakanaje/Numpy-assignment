@@ -8,6 +8,14 @@ public interface BatchService {
 
 	List<BatchDto> getAllBatches();
 
+	BatchDto createBatch(BatchDto batchDto);
+
+	
+
+	
+
+	
+
 	
 
 

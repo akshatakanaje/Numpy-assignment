@@ -10,6 +10,8 @@ import com.ninja.demo.entity.Program;
 public interface ProgramRepository extends JpaRepository<Program, Integer>{
 
 	boolean existsByProgramName(String programName);
+
+	
 	
 
 }

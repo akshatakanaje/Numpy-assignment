@@ -7,4 +7,6 @@ import com.ninja.demo.entity.Batch;
 @Repository
 public interface BatchRepository extends JpaRepository<Batch, Integer>{
 
+	boolean existsByBatchName(String batchName);
+
 }

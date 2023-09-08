@@ -34,7 +34,9 @@ public class ProgramServiceImpl implements ProgramService{
 	     
 		final List<Program> programRecords = programRepository.findAll();
 	     
-		 List<ProgramDto>  programDtoList = new ArrayList<ProgramDto>();
+		   List<ProgramDto>  programDtoList = new ArrayList<ProgramDto>();
+		
+		 //converting program to programDto
 	     for (Program program : programRecords) {
 			ProgramDto programDto = new ProgramDto();
 			programDto.setProgramId(program.getProgramId());
@@ -44,7 +46,8 @@ public class ProgramServiceImpl implements ProgramService{
 			
 			//add all batches
 			Set<Batch> batches = program.getBatches();
-			Set<BatchDto> batchDtoSet = new HashSet<BatchDto>();
+			Set<BatchDto> batchDtoSet = new HashSet<BatchDto>();			
+			//converting batch to batchDto
 			for (Batch batch : batches) {
 				BatchDto batchDto = new BatchDto();
 				batchDto.setBatchId(batch.getBatchId());
@@ -90,6 +93,7 @@ public class ProgramServiceImpl implements ProgramService{
 	@Override
 	public ProgramDto createProgram(ProgramDto programDto) {
 		
+		//check program name exists or not
 		boolean exists = programRepository.existsByProgramName(programDto.getProgramName());
 		
 		if(!exists) {		
@@ -100,21 +104,22 @@ public class ProgramServiceImpl implements ProgramService{
 		 
 		Program saveProgram = programRepository.save(program);
 		
-		ProgramDto programToProgramDto = new ProgramDto();
-		programToProgramDto.setProgramName(saveProgram.getProgramName());
-		programToProgramDto.setProgramStatus(saveProgram.getProgramStatus());
-		programToProgramDto.setProgramDescription(saveProgram.getProgramDescription());
-		programToProgramDto.setProgramId(saveProgram.getProgramId());
-		
-		return programToProgramDto;
+		ProgramDto returnProgramDto = new ProgramDto();
+		returnProgramDto.setProgramId(saveProgram.getProgramId());
+		returnProgramDto.setProgramName(saveProgram.getProgramName());
+		returnProgramDto.setProgramStatus(saveProgram.getProgramStatus());
+		returnProgramDto.setProgramDescription(saveProgram.getProgramDescription());
+			
+		return returnProgramDto;
 	 }
-		throw new AlreadyExistException("Program name already exist with name '" + programDto.getProgramName() + "'");
+		throw new AlreadyExistException("Program with the name already exist'" + programDto.getProgramName() + "'");
 	}
 
 	
 	@Override
 	public ProgramDto updateProgram(int programId, ProgramDto programDto) {
 		
+		//checking program id is present or not
 		Optional<Program> optional = programRepository.findById(programId);
 		if (optional.isPresent()) {			
 			Program program = optional.get();
@@ -132,13 +137,13 @@ public class ProgramServiceImpl implements ProgramService{
 			program.setLastModTime(new Date());
 			
 			Program saveProgram = programRepository.save(program);
-			ProgramDto programToProgramDto = new ProgramDto();
-			programToProgramDto.setProgramName(saveProgram.getProgramName());
-			programToProgramDto.setProgramStatus(saveProgram.getProgramStatus());
-			programToProgramDto.setProgramDescription(saveProgram.getProgramDescription());
-			programToProgramDto.setProgramId(saveProgram.getProgramId());
+			ProgramDto returnProgramDto = new ProgramDto();
+			returnProgramDto.setProgramName(saveProgram.getProgramName());
+			returnProgramDto.setProgramStatus(saveProgram.getProgramStatus());
+			returnProgramDto.setProgramDescription(saveProgram.getProgramDescription());
+			returnProgramDto.setProgramId(saveProgram.getProgramId());
 			
-			return programToProgramDto;									
+			return returnProgramDto;									
 		} 
 			// throw new ProgramNotFoundException();
 			throw new NotFoundException("Program does not exist with id '" + programId + "'");

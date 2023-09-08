@@ -16,6 +16,7 @@ public class ProgramDto {
 	private String programDescription;
 	private String programStatus;
 	
+	//fetching batch data 
 	private Set<BatchDto> batches;
 
 }
