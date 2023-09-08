@@ -33,6 +33,7 @@ public class BatchServiceImpl implements BatchService{
 		final List<Batch> batchRecords = batchRepository.findAll();
 		
 		List<BatchDto> batchDtoList = new ArrayList<BatchDto>();
+		//convert Entity to Dto
 		for (Batch batch : batchRecords) {
 			BatchDto batchDto = new BatchDto();
 			batchDto.setBatchId(batch.getBatchId());
@@ -40,9 +41,10 @@ public class BatchServiceImpl implements BatchService{
 			batchDto.setBatchDescription(batch.getBatchDescription());
 			batchDto.setBatchStatus(batch.getBatchStatus());
 			batchDto.setBatchNoOfClasses(batch.getBatchNoOfClasses());
-			
+		
 			 batchDtoList.add(batchDto);
 		}
+		//return the list
 		return batchDtoList;
 
 	}
@@ -55,21 +57,25 @@ public class BatchServiceImpl implements BatchService{
 		if(batchRepository.existsByBatchName(batchDto.getBatchName())) {
 			throw new AlreadyExistException("Batch with the name already exists");
 		}
-				
+			
+		//checking program id is present or not because without program id there is no batches
 		Optional<Program> optional = programRepository.findById(batchDto.getProgramId());
 		if(optional.isPresent()) {	
 			Program program = optional.get();
 			
+			//converting Dto to program
 			Batch batch = new Batch();
 			batch.setBatchName(batchDto.getBatchName());
 			batch.setBatchDescription(batchDto.getBatchDescription());
 			batch.setBatchStatus(batchDto.getBatchStatus());
 			batch.setBatchNoOfClasses(batchDto.getBatchNoOfClasses());
 			
+			//link the program with batch
 			batch.setProgram(program);
 			
 			Batch saveBatch = batchRepository.save(batch);
 			
+			//converting Entity to Dto
 			BatchDto returnBatchDto = new BatchDto();
 			returnBatchDto.setBatchId(saveBatch.getBatchId());
 			returnBatchDto.setBatchName(saveBatch.getBatchName());
@@ -89,6 +95,7 @@ public class BatchServiceImpl implements BatchService{
 	@Override
 	public BatchDto updateBatch(int batchId, BatchDto batchDto) {
 		
+		//checking batch id
 		Optional<Batch> optional = batchRepository.findById(batchId);
 		if(optional.isPresent()) {
 			Batch batch = optional.get();
@@ -109,6 +116,7 @@ public class BatchServiceImpl implements BatchService{
 			batch.setLastModTime(new Date());
 			
 			Batch saveBatch = batchRepository.save(batch);
+			//converting Entity to Dto
 			BatchDto returnBatchDto = new BatchDto();
 			returnBatchDto.setBatchId(saveBatch.getBatchId());
 			returnBatchDto.setBatchName(saveBatch.getBatchName());
@@ -127,6 +135,7 @@ public class BatchServiceImpl implements BatchService{
 
 	@Override
 	public ResponseDto deleteProgram(int batchId) {
+		//checking batch id
 		Optional<Batch> optional = batchRepository.findById(batchId);
 		if(optional.isPresent()) {
 			Batch batch = optional.get();

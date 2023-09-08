@@ -36,7 +36,7 @@ public class ProgramServiceImpl implements ProgramService{
 	     
 		   List<ProgramDto>  programDtoList = new ArrayList<ProgramDto>();
 		
-		 //converting program to programDto
+		 //converting Entity to Dto
 	     for (Program program : programRecords) {
 			ProgramDto programDto = new ProgramDto();
 			programDto.setProgramId(program.getProgramId());
@@ -47,7 +47,7 @@ public class ProgramServiceImpl implements ProgramService{
 			//add all batches
 			Set<Batch> batches = program.getBatches();
 			Set<BatchDto> batchDtoSet = new HashSet<BatchDto>();			
-			//converting batch to batchDto
+			 //converting Entity to Dto
 			for (Batch batch : batches) {
 				BatchDto batchDto = new BatchDto();
 				batchDto.setBatchId(batch.getBatchId());
@@ -63,29 +63,6 @@ public class ProgramServiceImpl implements ProgramService{
 		   programDtoList.add(programDto);	
 		}
 		return programDtoList;	     	     	     	     	     	     		     
-	     /*
-	     return programRecords.stream()
-	    		 .map(p -> {
-	    			 final ProgramDto programDto  = new ProgramDto();
-	    			 programDto.setProgramId(p.getProgramId());
-	    			 programDto.setProgramName(p.getProgramName());
-	    			 programDto.setProgramStatus(p.getProgramStatus());
-	    			 programDto.setProgramDescription(p.getProgramDescription());
-	    			 	    			 
-	    			 // add all the batches 
-	    			 Set<Batch> batches = p.getBatches();
-	    			 Set<BatchDto> batchDtos = 
-	    					 batches.stream()
-	    					 .map(b -> new BatchDto(b.getBatchId(), 
-	    							 b.getBatchName(), b.getBatchStatus(),
-	    							 b.getBatchDescription(), 
-	    							 b.getBatchNoOfClasses())
-	    		).collect(Collectors.toSet());	    			 
-	    			 programDto.setBatches(batchDtos);	    			 
-	    			 return programDto;	    		 
-	    		}	     
-	  ).collect(Collectors.toList());
-	  */
 		
 	}
 
@@ -96,7 +73,8 @@ public class ProgramServiceImpl implements ProgramService{
 		//check program name exists or not
 		boolean exists = programRepository.existsByProgramName(programDto.getProgramName());
 		
-		if(!exists) {		
+		if(!exists) {
+	    //converting Dto to Entity
 		Program program = new Program();
 		program.setProgramName(programDto.getProgramName());
 		program.setProgramStatus(programDto.getProgramStatus());
@@ -104,6 +82,7 @@ public class ProgramServiceImpl implements ProgramService{
 		 
 		Program saveProgram = programRepository.save(program);
 		
+		//converting Entity to Dto
 		ProgramDto returnProgramDto = new ProgramDto();
 		returnProgramDto.setProgramId(saveProgram.getProgramId());
 		returnProgramDto.setProgramName(saveProgram.getProgramName());
@@ -137,6 +116,7 @@ public class ProgramServiceImpl implements ProgramService{
 			program.setLastModTime(new Date());
 			
 			Program saveProgram = programRepository.save(program);
+			//converting Entity to Dto
 			ProgramDto returnProgramDto = new ProgramDto();
 			returnProgramDto.setProgramName(saveProgram.getProgramName());
 			returnProgramDto.setProgramStatus(saveProgram.getProgramStatus());
@@ -152,6 +132,7 @@ public class ProgramServiceImpl implements ProgramService{
 
 	@Override
 	public ResponseDto deleteProgram(int programId) {
+		//checking program id is present or not
 		Optional<Program> optional = programRepository.findById(programId);
 		if(optional.isPresent()) {
 			Program program = optional.get();	
