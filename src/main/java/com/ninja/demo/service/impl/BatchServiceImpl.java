@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.ninja.demo.exceptions.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,6 @@ public class BatchServiceImpl implements BatchService {
     @Autowired
     ProgramRepository programRepository;
 
-
     @Override
     public List<BatchDto> getAllBatches() {
         LOGGER.info("Getting all batches");
@@ -53,7 +53,6 @@ public class BatchServiceImpl implements BatchService {
         }
         //return the list
         return batchDtoList;
-
     }
 
 
@@ -61,7 +60,13 @@ public class BatchServiceImpl implements BatchService {
     public BatchDto createBatch(BatchDto batchDto) {
         LOGGER.info("Creating new batch");
 
-        //checking batch with the name exists or not
+        //validating batch name for null & empty
+        if(null == batchDto.getBatchName() || batchDto.getBatchName().trim().isEmpty()){
+            String message = String.format("Batch name must not be null and empty");
+            throw new BadRequestException(message);
+        }
+
+        //checking batch with the name and program id exists
         if (batchRepository
                 .existsByBatchNameAndProgramProgramId(batchDto.getBatchName(), batchDto.getProgramId())) {
             String message = String.format("Batch with the name=%s and programId=%d already exists",
@@ -74,7 +79,7 @@ public class BatchServiceImpl implements BatchService {
         if (optional.isPresent()) {
             Program program = optional.get();
 
-            //converting Dto to program
+            //converting Dto to Entity
             Batch batch = new Batch();
             batch.setBatchName(batchDto.getBatchName());
             batch.setBatchDescription(batchDto.getBatchDescription());
@@ -85,7 +90,6 @@ public class BatchServiceImpl implements BatchService {
             batch.setProgram(program);
 
             Batch saveBatch = batchRepository.save(batch);
-
             //converting Entity to Dto
             BatchDto returnBatchDto = new BatchDto();
             returnBatchDto.setBatchId(saveBatch.getBatchId());
@@ -94,14 +98,11 @@ public class BatchServiceImpl implements BatchService {
             returnBatchDto.setBatchStatus(saveBatch.getBatchStatus());
             returnBatchDto.setBatchNoOfClasses(saveBatch.getBatchNoOfClasses());
             returnBatchDto.setProgramId(saveBatch.getProgram().getProgramId());
-
             return returnBatchDto;
         }
-
-        throw new NotFoundException("Program id does not exist with id '" + batchDto.getProgramId() + "'");
-
+        String message = String.format("Program id does not exist with id '" + batchDto.getProgramId() + "'");
+        throw new NotFoundException(message);
     }
-
 
     @Override
     public BatchDto updateBatch(int batchId, BatchDto batchDto) {
@@ -112,6 +113,19 @@ public class BatchServiceImpl implements BatchService {
         if (optional.isPresent()) {
             Batch batch = optional.get();
 
+            // check if programId is not null and if programId is present
+            if (null != batchDto.getProgramId()) {
+                Optional<Program> programOptional = programRepository.findById(batchDto.getProgramId());
+                if (!programOptional.isPresent()) {
+                    String message  = String.format("Program with id=%d does not exist",
+                            batchDto.getProgramId());
+                    throw new BadRequestException(message);
+                } else {
+                    batch.setProgram(programOptional.get());
+                }
+            }
+
+            //checking if updating data is not null
             if (null != batchDto.getBatchName()) {
                 batch.setBatchName(batchDto.getBatchName());
             }
@@ -139,11 +153,10 @@ public class BatchServiceImpl implements BatchService {
 
             return returnBatchDto;
         }
-
         // throw new BatchNotFoundException();
-        throw new NotFoundException("Batch does not exist with id '" + batchId + "'");
+        String message = String.format("Batch does not exist with id '" + batchId + "'");
+        throw new NotFoundException(message);
     }
-
 
     @Override
     public ResponseDto deleteProgram(int batchId) {
@@ -154,10 +167,10 @@ public class BatchServiceImpl implements BatchService {
         if (optional.isPresent()) {
             Batch batch = optional.get();
             batchRepository.deleteById(batchId);
-
             return new ResponseDto("Success", "Batch is deleted", new Date(), null);
         }
-        //throw new IdNotFound
-        throw new NotFoundException("Batch does not exist with id '" + batchId + "'");
+        //throw new idNotFound
+        String message = String.format("Batch does not exist with id '" + batchId + "'");
+        throw new NotFoundException(message);
     }
 }

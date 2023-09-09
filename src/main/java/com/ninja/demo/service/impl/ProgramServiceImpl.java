@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.ninja.demo.exceptions.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +30,10 @@ public class ProgramServiceImpl implements ProgramService{
 	
 	@Autowired
 	ProgramRepository programRepository;
-	
+
 	@Override
 	public List<ProgramDto> getAllPrograms() {
 		LOGGER.info("Getting all programs");
-	     
 		final List<Program> programRecords = programRepository.findAll();
 	     
 		   List<ProgramDto>  programDtoList = new ArrayList<ProgramDto>();
@@ -64,18 +64,21 @@ public class ProgramServiceImpl implements ProgramService{
 			
 		   programDtoList.add(programDto);	
 		}
-		return programDtoList;	     	     	     	     	     	     		     
-		
+		return programDtoList;
 	}
 
-	
 	@Override
 	public ProgramDto createProgram(ProgramDto programDto) {
 		LOGGER.info("Creating new program");
-		
+
+		//validating program name for null and empty
+		if(null == programDto.getProgramName() || programDto.getProgramName().trim().isEmpty()){
+			String message = String.format("Program name must not be null and empty");
+			throw new BadRequestException(message);
+		}
+
 		//check program name exists or not
 		boolean exists = programRepository.existsByProgramName(programDto.getProgramName());
-		
 		if(!exists) {
 	    //converting Dto to Entity
 		Program program = new Program();
@@ -84,20 +87,18 @@ public class ProgramServiceImpl implements ProgramService{
 		program.setProgramDescription(programDto.getProgramDescription());
 		 
 		Program saveProgram = programRepository.save(program);
-		
 		//converting Entity to Dto
 		ProgramDto returnProgramDto = new ProgramDto();
 		returnProgramDto.setProgramId(saveProgram.getProgramId());
 		returnProgramDto.setProgramName(saveProgram.getProgramName());
 		returnProgramDto.setProgramStatus(saveProgram.getProgramStatus());
 		returnProgramDto.setProgramDescription(saveProgram.getProgramDescription());
-			
 		return returnProgramDto;
 	 }
-		throw new AlreadyExistException("Program with the name already exist'" + programDto.getProgramName() + "'");
+		String message = String.format("Program with the name already exist'" + programDto.getProgramName() + "'");
+		throw new AlreadyExistException(message);
 	}
 
-	
 	@Override
 	public ProgramDto updateProgram(int programId, ProgramDto programDto) {
 		LOGGER.info("Updating program by programId={}", programId);
@@ -126,13 +127,12 @@ public class ProgramServiceImpl implements ProgramService{
 			returnProgramDto.setProgramStatus(saveProgram.getProgramStatus());
 			returnProgramDto.setProgramDescription(saveProgram.getProgramDescription());
 			returnProgramDto.setProgramId(saveProgram.getProgramId());
-			
 			return returnProgramDto;									
 		} 
 			// throw new ProgramNotFoundException();
-			throw new NotFoundException("Program does not exist with id '" + programId + "'");
+		    String message = String.format("Program does not exist with id '" + programId + "'");
+			throw new NotFoundException(message);
 	}
-
 
 	@Override
 	public ResponseDto deleteProgram(int programId) {
@@ -143,11 +143,10 @@ public class ProgramServiceImpl implements ProgramService{
 		if(optional.isPresent()) {
 			Program program = optional.get();	
 			programRepository.deleteById(programId);
-			
 			return new ResponseDto("Success", "Program is deleted", new Date(), null);
 		}
 		//throw new IdNotFound
-		throw new NotFoundException("Program does not exist with id '" + programId + "'");
-	}	
-
+		String message = String.format("Program does not exist with id '" + programId + "'");
+		throw new NotFoundException(message);
+	}
 }

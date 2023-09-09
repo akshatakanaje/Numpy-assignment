@@ -17,6 +17,6 @@ public class BatchDto {
 	private String batchStatus;
 	private int batchNoOfClasses;
 	
-	private int programId;
+	private Integer programId;
 	
 }
