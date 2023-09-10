@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -16,6 +18,8 @@ public class BatchDto {
 	private String batchDescription;
 	private String batchStatus;
 	private int batchNoOfClasses;
+	private Date creationTime = new Date();
+	private Date lastModTime = new Date();
 	
 	private Integer programId;
 	

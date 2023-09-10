@@ -1,6 +1,7 @@
 package com.ninja.demo.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.ninja.demo.dto.ProgramDto;
 import com.ninja.demo.dto.ResponseDto;
@@ -15,8 +16,5 @@ public interface ProgramService {
 
 	ResponseDto deleteProgram(int programId);
 
-	
-
-	
-
+	ProgramDto getOne(int programId);
 }

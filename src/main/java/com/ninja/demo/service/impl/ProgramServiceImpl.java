@@ -45,6 +45,8 @@ public class ProgramServiceImpl implements ProgramService{
 			programDto.setProgramName(program.getProgramName());
 			programDto.setProgramDescription(program.getProgramDescription());
 			programDto.setProgramStatus(program.getProgramStatus());
+			programDto.setCreationTime(program.getCreationTime());
+			programDto.setLastModTime(program.getLastModTime());
 			
 			//add all batches
 			Set<Batch> batches = program.getBatches();
@@ -85,6 +87,8 @@ public class ProgramServiceImpl implements ProgramService{
 		program.setProgramName(programDto.getProgramName());
 		program.setProgramStatus(programDto.getProgramStatus());
 		program.setProgramDescription(programDto.getProgramDescription());
+		program.setCreationTime(programDto.getCreationTime());
+		program.setLastModTime(programDto.getLastModTime());
 		 
 		Program saveProgram = programRepository.save(program);
 		//converting Entity to Dto
@@ -93,6 +97,8 @@ public class ProgramServiceImpl implements ProgramService{
 		returnProgramDto.setProgramName(saveProgram.getProgramName());
 		returnProgramDto.setProgramStatus(saveProgram.getProgramStatus());
 		returnProgramDto.setProgramDescription(saveProgram.getProgramDescription());
+		returnProgramDto.setCreationTime(saveProgram.getCreationTime());
+		returnProgramDto.setLastModTime(saveProgram.getLastModTime());
 		return returnProgramDto;
 	 }
 		String message = String.format("Program with the name already exist'" + programDto.getProgramName() + "'");
@@ -127,6 +133,8 @@ public class ProgramServiceImpl implements ProgramService{
 			returnProgramDto.setProgramStatus(saveProgram.getProgramStatus());
 			returnProgramDto.setProgramDescription(saveProgram.getProgramDescription());
 			returnProgramDto.setProgramId(saveProgram.getProgramId());
+			returnProgramDto.setCreationTime(saveProgram.getCreationTime());
+			returnProgramDto.setLastModTime(saveProgram.getLastModTime());
 			return returnProgramDto;									
 		} 
 			// throw new ProgramNotFoundException();
@@ -145,7 +153,44 @@ public class ProgramServiceImpl implements ProgramService{
 			programRepository.deleteById(programId);
 			return new ResponseDto("Success", "Program is deleted", new Date(), null);
 		}
-		//throw new IdNotFound
+		//throw new NotFound
+		String message = String.format("Program does not exist with id '" + programId + "'");
+		throw new NotFoundException(message);
+	}
+
+	@Override
+	public ProgramDto getOne(int programId) {
+		LOGGER.info("Getting program by programId={}", programId);
+
+		Optional<Program> optional = programRepository.findById(programId);
+		if (optional.isPresent()){
+			Program program = optional.get();
+            //converting Entity to Dto
+			ProgramDto programDto = new ProgramDto();
+			programDto.setProgramId(program.getProgramId());
+			programDto.setProgramName(program.getProgramName());
+			programDto.setProgramStatus(program.getProgramStatus());
+			programDto.setProgramDescription(program.getProgramDescription());
+            programDto.setCreationTime(program.getCreationTime());
+			programDto.setLastModTime(program.getLastModTime());
+
+			//get all batches
+			Set<Batch> batches = program.getBatches();
+			Set<BatchDto> batchDtoSet = new HashSet<BatchDto>();
+			//converting Entity to Dto
+			for (Batch batch : batches) {
+				BatchDto batchDto = new BatchDto();
+				batchDto.setBatchId(batch.getBatchId());
+				batchDto.setBatchName(batch.getBatchName());
+				batchDto.setBatchStatus(batch.getBatchStatus());
+				batchDto.setBatchDescription(batch.getBatchDescription());
+				batchDto.setBatchNoOfClasses(batch.getBatchNoOfClasses());
+
+				batchDtoSet.add(batchDto);
+			}
+			programDto.setBatches(batchDtoSet);
+			return programDto;
+		}
 		String message = String.format("Program does not exist with id '" + programId + "'");
 		throw new NotFoundException(message);
 	}

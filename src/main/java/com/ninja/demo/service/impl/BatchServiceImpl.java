@@ -48,6 +48,8 @@ public class BatchServiceImpl implements BatchService {
             batchDto.setBatchStatus(batch.getBatchStatus());
             batchDto.setBatchNoOfClasses(batch.getBatchNoOfClasses());
             batchDto.setProgramId(batch.getProgram().getProgramId());
+            batchDto.setCreationTime(batch.getCreationTime());
+            batchDto.setLastModTime(batch.getLastModTime());
 
             batchDtoList.add(batchDto);
         }
@@ -85,6 +87,8 @@ public class BatchServiceImpl implements BatchService {
             batch.setBatchDescription(batchDto.getBatchDescription());
             batch.setBatchStatus(batchDto.getBatchStatus());
             batch.setBatchNoOfClasses(batchDto.getBatchNoOfClasses());
+            batch.setCreationTime(batchDto.getCreationTime());
+            batch.setLastModTime(batchDto.getLastModTime());
 
             //link the program with batch
             batch.setProgram(program);
@@ -98,6 +102,8 @@ public class BatchServiceImpl implements BatchService {
             returnBatchDto.setBatchStatus(saveBatch.getBatchStatus());
             returnBatchDto.setBatchNoOfClasses(saveBatch.getBatchNoOfClasses());
             returnBatchDto.setProgramId(saveBatch.getProgram().getProgramId());
+            returnBatchDto.setCreationTime(saveBatch.getCreationTime());
+            returnBatchDto.setLastModTime(saveBatch.getLastModTime());
             return returnBatchDto;
         }
         String message = String.format("Program id does not exist with id '" + batchDto.getProgramId() + "'");
@@ -150,6 +156,8 @@ public class BatchServiceImpl implements BatchService {
             returnBatchDto.setBatchStatus(saveBatch.getBatchStatus());
             returnBatchDto.setBatchNoOfClasses(saveBatch.getBatchNoOfClasses());
             returnBatchDto.setProgramId(saveBatch.getProgram().getProgramId());
+            returnBatchDto.setCreationTime(saveBatch.getCreationTime());
+            returnBatchDto.setLastModTime(saveBatch.getLastModTime());
 
             return returnBatchDto;
         }
@@ -170,6 +178,29 @@ public class BatchServiceImpl implements BatchService {
             return new ResponseDto("Success", "Batch is deleted", new Date(), null);
         }
         //throw new idNotFound
+        String message = String.format("Batch does not exist with id '" + batchId + "'");
+        throw new NotFoundException(message);
+    }
+
+    @Override
+    public BatchDto getOneBatch(int batchId) {
+        LOGGER.info("Getting batch by batchId={}", batchId);
+
+        Optional<Batch> optional = batchRepository.findById(batchId);
+        if(optional.isPresent()){
+            Batch batch = optional.get();
+            //converting Entity to Dto
+            BatchDto batchDto = new BatchDto();
+            batchDto.setBatchId(batch.getBatchId());
+            batchDto.setBatchName(batch.getBatchName());
+            batchDto.setBatchDescription(batch.getBatchDescription());
+            batchDto.setBatchStatus(batch.getBatchStatus());
+            batchDto.setBatchNoOfClasses(batch.getBatchNoOfClasses());
+            batchDto.setCreationTime(batch.getCreationTime());
+            batchDto.setLastModTime(batch.getLastModTime());
+            batchDto.setProgramId(batch.getProgram().getProgramId());
+            return batchDto;
+        }
         String message = String.format("Batch does not exist with id '" + batchId + "'");
         throw new NotFoundException(message);
     }

@@ -28,6 +28,12 @@ public class BatchController {
 	public List<BatchDto> getAllBatches(){
 		return batchService.getAllBatches();
 	}
+
+	//Get batch by batchId
+	@GetMapping("/{batchId}")
+	public BatchDto getOneBatch(@PathVariable ("batchId") int batchId){
+		return batchService.getOneBatch(batchId);
+	}
 	
 	//Create batch
 	@PostMapping
@@ -40,7 +46,6 @@ public class BatchController {
 	public BatchDto updateBatch(@RequestBody BatchDto batchDto, @PathVariable int batchId) {
 		return batchService.updateBatch(batchId, batchDto);
 	}
-	
 
 	//Delete batch
 	@DeleteMapping("/{batchId}")

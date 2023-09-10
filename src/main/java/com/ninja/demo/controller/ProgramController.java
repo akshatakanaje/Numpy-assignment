@@ -1,7 +1,9 @@
 package com.ninja.demo.controller;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.ninja.demo.entity.Program;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +30,13 @@ public class ProgramController {
 	public List<ProgramDto> getAllPrograms(){
 		return programService.getAllPrograms();
 	}
-	
-	
+
+	//get one program by id
+	@GetMapping("/{programId}")
+	public ProgramDto getOne(@PathVariable ("programId") int programId){
+       return programService.getOne(programId);
+	}
+
 	//Create new program
 	@PostMapping
 	public ProgramDto createProgram(@RequestBody ProgramDto programDto) {

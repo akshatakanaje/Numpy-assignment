@@ -15,5 +15,5 @@ public interface BatchService {
 
 	ResponseDto deleteProgram(int batchId);
 
-
+    BatchDto getOneBatch(int batchId);
 }
