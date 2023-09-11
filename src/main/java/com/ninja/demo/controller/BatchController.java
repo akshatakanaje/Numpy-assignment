@@ -50,7 +50,7 @@ public class BatchController {
 	//Delete batch
 	@DeleteMapping("/{batchId}")
 	ResponseDto deleteBatch(@PathVariable int batchId) {
-			return batchService.deleteProgram(batchId);
+			return batchService.deleteBatch(batchId);
 	}
 
 }

@@ -50,7 +50,7 @@ public class Program {
 	@Column(name="last_mod_time")
 	private Date lastModTime = new Date();
 	
-	
+	//mappedBy--inside batch it create a program id as foreign key
 	@OneToMany(mappedBy = "program", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
 	private Set<Batch> batches = new HashSet<Batch>();
 

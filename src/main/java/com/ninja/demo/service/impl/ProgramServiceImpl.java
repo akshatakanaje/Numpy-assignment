@@ -151,7 +151,7 @@ public class ProgramServiceImpl implements ProgramService{
 		if(optional.isPresent()) {
 			Program program = optional.get();	
 			programRepository.deleteById(programId);
-			return new ResponseDto("Success", "Program is deleted", new Date(), null);
+			return new ResponseDto("Success", "Program is deleted", new Date());
 		}
 		//throw new NotFound
 		String message = String.format("Program does not exist with id '" + programId + "'");

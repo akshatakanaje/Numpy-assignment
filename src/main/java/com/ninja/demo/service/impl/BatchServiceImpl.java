@@ -167,7 +167,7 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public ResponseDto deleteProgram(int batchId) {
+    public ResponseDto deleteBatch(int batchId) {
         LOGGER.info("Deleting batch by batchId={}", batchId);
 
         //checking batch id
@@ -175,7 +175,7 @@ public class BatchServiceImpl implements BatchService {
         if (optional.isPresent()) {
             Batch batch = optional.get();
             batchRepository.deleteById(batchId);
-            return new ResponseDto("Success", "Batch is deleted", new Date(), null);
+            return new ResponseDto("Success", "Batch is deleted", new Date());
         }
         //throw new idNotFound
         String message = String.format("Batch does not exist with id '" + batchId + "'");

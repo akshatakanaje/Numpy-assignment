@@ -14,6 +14,6 @@ public class ResponseDto {
 	private String status;
 	private String message;
 	private Date timestamp = new Date();
-	private Object data;
+
 
 }

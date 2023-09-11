@@ -13,7 +13,7 @@ public interface BatchService {
 
 	BatchDto updateBatch(int batchId, BatchDto batchDto);
 
-	ResponseDto deleteProgram(int batchId);
+	ResponseDto deleteBatch(int batchId);
 
     BatchDto getOneBatch(int batchId);
 }

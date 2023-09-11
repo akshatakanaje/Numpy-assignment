@@ -4,13 +4,12 @@ import java.util.Date;
 import java.util.Set;
 
 import com.ninja.demo.entity.Batch;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class ProgramDto {
 	
 	private int programId;
