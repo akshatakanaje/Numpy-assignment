@@ -114,6 +114,14 @@ public class BatchServiceImpl implements BatchService {
     public BatchDto updateBatch(int batchId, BatchDto batchDto) {
         LOGGER.info("Updating batch by batchId={}", batchId);
 
+        //checking batch with the name and program id exists
+        if (batchRepository
+                .existsByBatchNameAndProgramProgramId(batchDto.getBatchName(), batchDto.getProgramId())) {
+            String message = String.format("Batch with the name=%s and programId=%d already exists",
+                    batchDto.getBatchName(), batchDto.getProgramId());
+            throw new AlreadyExistException(message);
+        }
+
         //checking batch id
         Optional<Batch> optional = batchRepository.findById(batchId);
         if (optional.isPresent()) {

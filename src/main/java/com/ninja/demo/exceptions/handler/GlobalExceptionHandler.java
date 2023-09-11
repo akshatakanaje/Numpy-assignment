@@ -18,20 +18,20 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(value = AlreadyExistException.class)
 	public ResponseEntity<ResponseDto> alreadyExistException(AlreadyExistException ex) {
-		responseDto = new ResponseDto(HttpStatus.CONFLICT.toString(), ex.getMessage(),new Date(), null );
+		responseDto = new ResponseDto(HttpStatus.CONFLICT.toString(), ex.getMessage(),new Date());
 		return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.CONFLICT);
 	}
 
 
 	@ExceptionHandler(value = NotFoundException.class)
 	public ResponseEntity<ResponseDto> notFoundException(NotFoundException ex) {
-		responseDto = new ResponseDto(HttpStatus.NOT_FOUND.toString(), ex.getMessage(),new Date(), null );
+		responseDto = new ResponseDto(HttpStatus.NOT_FOUND.toString(), ex.getMessage(),new Date());
 		return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(value = BadRequestException.class)
 	public ResponseEntity<ResponseDto> badRequestException(BadRequestException ex){
-		responseDto = new ResponseDto(HttpStatus.BAD_REQUEST.toString(), ex.getMessage(), new Date(), null);
+		responseDto = new ResponseDto(HttpStatus.BAD_REQUEST.toString(), ex.getMessage(), new Date());
 		return  new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
 	}
 

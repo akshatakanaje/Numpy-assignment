@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class AlreadyExistException extends RuntimeException{
-		
-	private static final long serialVersionUID = 2315783994437555895L;
-	
+
 	private String message;
 
 }
