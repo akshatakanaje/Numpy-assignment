@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'  # Use the required Java version for your project
-          distribution: 'adoptopenjdk'
+          distribution: 'temurin'
 
       # Step 3: Build the application with Maven
       - name: Build with Maven
