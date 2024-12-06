@@ -1,0 +1,41 @@
+name: Build and Deploy Spring Boot to EC2
+
+on:
+  push:
+    branches:
+      -  main    #Trigger on changes to the main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up JDK
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'  # Use the required Java version for your project
+          distribution: 'oracle-jdk'
+
+      # Step 3: Build the application with Maven
+      - name: Build with Maven
+        run: mvn clean package
+
+      # Step 4: Set up SSH
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      # Step 5: Deploy to EC2
+      - name: Deploy to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no target/*.jar ${{ secrets.USERNAME }}@${{ secrets.HOST_DNS }}:/home/ec2-user/demo-program-0.0.1-SNAPSHOT.jar
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST_DNS }} << 'EOF'
+            pkill -f 'java -jar' || true  # Stop the running app if exists
+            nohup java -jar /home/ec2-user/demo-program-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
+          EOF
